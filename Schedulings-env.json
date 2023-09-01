@@ -1,0 +1,45 @@
+{
+	"id": "d62ab30d-6ac4-45e8-9c69-0d217a4ba72b",
+	"name": "Schedulings",
+	"values": [
+		{
+			"key": "url",
+			"value": "localhost:21163/api",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "nameFormScheduling",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "scheduleStartDate",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "scheduleEndDate",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "scheduleImageURL",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "loginUser",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-09-01T21:18:42.913Z",
+	"_postman_exported_using": "Postman/10.17.5"
+}

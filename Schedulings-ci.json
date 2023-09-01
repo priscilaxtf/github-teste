@@ -1,0 +1,2006 @@
+{
+	"info": {
+		"_postman_id": "68c6b911-b05c-4d59-80b0-eef4b83a8171",
+		"name": "API_Schedulings",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26077753",
+		"_collection_link": "https://planetary-comet-5673.postman.co/workspace/The-Originals---Academy-API~f5d84a9c-dbf0-4200-9ba2-3adbd07e78a9/collection/26077753-68c6b911-b05c-4d59-80b0-eef4b83a8171?action=share&source=collection_link&creator=26077753"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Priscila Teixeira Ferreira\",\r\n    \"mail\": \"qacoders10@academy_treinamento.com.br\",\r\n    \"password\": \"Qa@Coders2023\",\r\n    \"confirmPassword\": \"Qa@Coders2023\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"audit\":[\r\n        {\r\n            \"loginUser\": \"priscila\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:21163/api/signup",
+							"host": [
+								"localhost"
+							],
+							"port": "21163",
+							"path": [
+								"api",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mail\": \"qacoders10@academy_treinamento.com.br\",\r\n    \"password\": \"Qa@Coders2023\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:21163/api/login",
+							"host": [
+								"localhost"
+							],
+							"port": "21163",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Scheduling Automation",
+			"item": [
+				{
+					"name": "View Scheduling",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Scheduling - sucess",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"//Gera data atual com o acréscimo de 10 minutos\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual + 600\r",
+									"pm.environment.set(\"scheduleStartDate\",startDate)\r",
+									"\r",
+									"//Gera data final\r",
+									"const dataFinal = Math.floor(Date.now() / 1000);\r",
+									"const endDate = dataFinal + 604800\r",
+									"pm.environment.set(\"scheduleEndDate\",endDate)\r",
+									"\r",
+									"// Retorna URL que gera imagens randômicas\r",
+									"var imageURL = \"https://picsum.photos/200/300\";\r",
+									"pm.environment.set(\"scheduleImageURL\", imageURL)\r",
+									"\r",
+									"// Gera um e-mail aleatório\r",
+									"pm.environment.set(\"loginUser\", \r",
+									"pm.variables.replaceIn('{{$randomEmail}}'));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nameFormScheduling -  cannot be null",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Cria uma variável com valor null e o armazena na variável de ambiente \"nameFormScheduling\"\r",
+									"var nameFormSchedulingNull = null;\r",
+									"    console.log(pm.environment.set(\"nameFormScheduling\", nameFormSchedulingNull));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O campo nome do agendamento é obrigatório.'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"O campo nome do agendamento é obrigatório.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": {{nameFormScheduling}},\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nameFormScheduling - cannot be empty",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Cria uma variável com valor vazio e o armazena na variável de ambiente \"nameFormScheduling\"\r",
+									"var nameFormSchedulingEmpty = \"\";\r",
+									"    console.log(pm.environment.set(\"nameFormScheduling\", nameFormSchedulingEmpty));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O campo nome do agendamento é obrigatório.'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"O campo nome do agendamento é obrigatório.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nameFormScheduling - value cannot be different from string",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera um valor numérico inteiro aleatório e o armazena na variável de ambiente \"nameFormScheduling\"\r",
+									"pm.environment.set(\"nameFormScheduling\", \r",
+									"pm.variables.replaceIn('{{$randomInt}}'));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O nome do agendamento deve ser do tipo string.'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"O nome do agendamento deve ser do tipo string.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": {{nameFormScheduling}},\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nameFormScheduling - value cannot be more than 50 characters",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento QA\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - Turma \" + getRandomIntInclusive() + \" - \" + \"Projeto Qa.Coders Academy\")"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O nome do agendamento deve ter no máximo 50 caracteres.'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"O nome do agendamento deve ter no máximo 50 caracteres.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleStartDate - cannot be null",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"// Cria uma variável com valor null e o armazena na variável de ambiente \"scheduleStartDate\"\r",
+									"var nameFormSchedulingNull = null;\r",
+									"    console.log(pm.environment.set(\"scheduleStartDate\", nameFormSchedulingNull));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O campo data inicial é obrigatório'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"O campo data inicial é obrigatório.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleStartDate - cannot be empty",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"// Cria uma variável com valor vazio e o armazena na variável de ambiente \"scheduleStartDate\"\r",
+									"var nameFormSchedulingEmpty = \"\";\r",
+									"    console.log(pm.environment.set(\"scheduleStartDate\", nameFormSchedulingEmpty));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O campo data inicial é obrigatório'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"O campo data inicial é obrigatório.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": \"{{scheduleStartDate}}\",\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleStartDate - value cannot be a number less than 0",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"//Gera um número aleatório negativo\r",
+									"function getRandomIntCharacters(min, max) {\r",
+									"  min = Math.ceil(0);\r",
+									"  max = Math.floor(-20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"scheduleStartDate\", getRandomIntCharacters())"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'Não foi possível salvar este agendamento com uma data inicial anterior à data de hoje'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"Não foi possível salvar este agendamento com uma data inicial anterior à data de hoje\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleStartDate - value must not be less than 15 characters",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"//Gera um número aleatório com mais de 15 caracteres\r",
+									"function getRandomIntCharacters(min, max) {\r",
+									"  min = Math.ceil(1111111111111111);\r",
+									"  max = Math.floor(9999999999999999);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"pm.environment.set(\"scheduleStartDate\", getRandomIntCharacters())"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O valor da data inicial deve ter no máximo 15 caracteres.'\", function () {\r",
+									"  const { alert } = pm.response.json()\r",
+									"  pm.expect(alert[0]).to.equal(\"O valor da data inicial deve ter no máximo 15 caracteres.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleStartDate - cannot be less than the current date",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"//Gera data do dia anterior\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual - 86400\r",
+									"pm.environment.set(\"scheduleStartDate\", startDate)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'Não foi possível salvar este agendamento com uma data inicial anterior à data de hoje'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"Não foi possível salvar este agendamento com uma data inicial anterior à data de hoje\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleEndDate - cannot be null",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"//Gera data atual\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual + 600\r",
+									"pm.environment.set(\"scheduleStartDate\",startDate)\r",
+									"\r",
+									"// Cria uma variável com valor null e o armazena na variável de ambiente \"scheduleEndDate\"\r",
+									"var nameFormSchedulingNull = null;\r",
+									"    console.log(pm.environment.set(\"scheduleEndDate\", nameFormSchedulingNull));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O campo data final é obrigatório.'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"O campo data final é obrigatório.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleEndDate - cannot be empty",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"// Gera data atual\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual + 600\r",
+									"pm.environment.set(\"scheduleStartDate\",startDate)\r",
+									"\r",
+									"// Cria uma variável com valor vazio e o armazena na variável de ambiente \"scheduleEndDate\"\r",
+									"var nameFormSchedulingEmpty = \"\";\r",
+									"pm.environment.set(\"scheduleEndDate\", nameFormSchedulingEmpty);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O campo data final é obrigatório.'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"O campo data final é obrigatório.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": \"\",\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleEndDate - value cannot be a number less than 0",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"//Gera data atual\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual + 600\r",
+									"pm.environment.set(\"scheduleStartDate\",startDate)\r",
+									"\r",
+									"//Gera um número aleatório negativo\r",
+									"function getRandomIntCharacters(min, max) {\r",
+									"  min = Math.ceil(0);\r",
+									"  max = Math.floor(-20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"scheduleEndDate\", getRandomIntCharacters())"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'Não foi possível salvar este agendamento com uma data final anterior à data inicial'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"Não foi possível salvar este agendamento com uma data final anterior à data inicial\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleEndDate - value must not be less than 15 characters",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"//Gera data atual\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual + 600\r",
+									"pm.environment.set(\"scheduleStartDate\",startDate)\r",
+									"\r",
+									"//Gera um número aleatório com mais de 15 caracteres\r",
+									"function getRandomIntCharacters(min, max) {\r",
+									"  min = Math.ceil(1111111111111111);\r",
+									"  max = Math.floor(9999999999999999);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"scheduleEndDate\", getRandomIntCharacters())"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O valor da data final deve ter no máximo 15 caracteres.'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"O valor da data final deve ter no máximo 15 caracteres.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleEndDate - cannot be less than the current date",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"//Gera data atual\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual + 600\r",
+									"pm.environment.set(\"scheduleStartDate\",startDate)\r",
+									"\r",
+									"//Gera data atual como data final\r",
+									"const dataFinal = Math.floor(Date.now() / 1000);\r",
+									"pm.environment.set(\"scheduleEndDate\", dataFinal)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'Não foi possível salvar este agendamento com uma data final anterior à data inicial'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"Não foi possível salvar este agendamento com uma data final anterior à data inicial\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleImageURL - cannot be null",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"//Gera data atual\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual + 600\r",
+									"pm.environment.set(\"scheduleStartDate\",startDate)\r",
+									"\r",
+									"//Gera data final\r",
+									"const dataFinal = Math.floor(Date.now() / 1000);\r",
+									"const endDate = dataFinal + 86400\r",
+									"pm.environment.set(\"scheduleEndDate\",endDate)\r",
+									"\r",
+									"// Cria uma variável com valor null e o armazena na variável de ambiente \"scheduleImageURL\"\r",
+									"var nameFormSchedulingNull = null;\r",
+									"    console.log(pm.environment.set(\"scheduleImageURL\", nameFormSchedulingNull));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O campo URL da imagem é obrigatório.'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"O campo URL da imagem é obrigatório.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": {{scheduleImageURL}},\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleImageURL - cannot be empty",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function nameFormScheduling_projeto () {\r",
+									"    var nameFormScheduling_projeto = [\"Qa.Coders\", \"Qa.Coders Academy\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling_projeto[Math.floor(Math.random() * nameFormScheduling_projeto.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - \" + nameFormScheduling_projeto())\r",
+									"\r",
+									"//Gera data atual\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual + 600\r",
+									"pm.environment.set(\"scheduleStartDate\",startDate)\r",
+									"\r",
+									"//Gera data final\r",
+									"const dataFinal = Math.floor(Date.now() / 1000);\r",
+									"const endDate = dataFinal + 86400\r",
+									"pm.environment.set(\"scheduleEndDate\",endDate)\r",
+									"\r",
+									"// Cria uma variável com valor vazio e o armazena na variável de ambiente \"scheduleImageURL\"\r",
+									"var nameFormSchedulingEmpty = \"\";\r",
+									"    console.log(pm.environment.set(\"scheduleImageURL\", nameFormSchedulingEmpty));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'O campo URL da imagem é obrigatório.'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"O campo URL da imagem é obrigatório.\")\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleImageURL - value cannot be different from string",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function nameFormScheduling_projeto () {\r",
+									"    var nameFormScheduling_projeto = [\"Qa.Coders\", \"Qa.Coders Academy\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling_projeto[Math.floor(Math.random() * nameFormScheduling_projeto.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - \" + nameFormScheduling_projeto())\r",
+									"\r",
+									"//Gera data atual\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual + 600\r",
+									"pm.environment.set(\"scheduleStartDate\",startDate)\r",
+									"\r",
+									"//Gera data final\r",
+									"const dataFinal = Math.floor(Date.now() / 1000);\r",
+									"const endDate = dataFinal + 86400\r",
+									"pm.environment.set(\"scheduleEndDate\",endDate)\r",
+									"\r",
+									"// Gera um valor numérico inteiro aleatório e o armazena na variável de ambiente \"scheduleImageURL\"\r",
+									"pm.environment.set(\"scheduleImageURL\", \r",
+									"pm.variables.replaceIn('{{$randomInt}}'));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'A URL da imagem deve ser do tipo string.'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"A URL da imagem deve ser do tipo string.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": {{scheduleImageURL}},\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "scheduleImageURL - value must not be less than 50 characters",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function nameFormScheduling_projeto () {\r",
+									"    var nameFormScheduling_projeto = [\"Qa.Coders\", \"Qa.Coders Academy\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling_projeto[Math.floor(Math.random() * nameFormScheduling_projeto.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - \" + nameFormScheduling_projeto())\r",
+									"\r",
+									"//Gera data atual\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual + 600\r",
+									"pm.environment.set(\"scheduleStartDate\",startDate)\r",
+									"\r",
+									"//Gera data final\r",
+									"const dataFinal = Math.floor(Date.now() / 1000);\r",
+									"const endDate = dataFinal + 86400\r",
+									"pm.environment.set(\"scheduleEndDate\",endDate)\r",
+									"\r",
+									"// Retorna URL com mais de 50 caracteres\r",
+									"var imageURL = \"https://s3.amazonaws.com/uifaces/faces/twitter/johnsmithagency/128.jpg\";\r",
+									"pm.environment.set(\"scheduleImageURL\", imageURL)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Aba tests\r",
+									"// Validação do Status Code para criação\r",
+									"pm.test(\"Status code is 400  \", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Alert is: 'A URL da imagem deve ter no máximo 50 caracteres.'\", function () {\r",
+									"  const { error } = pm.response.json()\r",
+									"  pm.expect(error[0]).to.equal(\"A URL da imagem deve ter no máximo 50 caracteres.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Scheduling",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Gera o nome do agendamento\r",
+									"function nameFormScheduling () {\r",
+									"    var nameFormScheduling = [\"Abertura de inscrições\", \"Evento importante\", \"Live de apresentação\", \"Semana do RH\", \"Treinamento\", \"Live de divulgação\", \"Depoimento dos alunos\", \"Apresentação parceiros\", \"Oportunidade estágio\", \"Oportunidade trainne\", \"Voluntariado\", \"Treinamento Postman\", \"Treinamento Azure\", \"Treinamento MongoDB\", \"Treinamento SQL\", \"Entrega de certificados\"];\r",
+									"\r",
+									"    var randomItem = nameFormScheduling[Math.floor(Math.random() * nameFormScheduling.length)];\r",
+									"\r",
+									"    return randomItem;\r",
+									"}\r",
+									"\r",
+									"function getRandomIntInclusive(min, max) {\r",
+									"  min = Math.ceil(1);\r",
+									"  max = Math.floor(20);\r",
+									"  return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"nameFormScheduling\",nameFormScheduling() + \" - T\" + getRandomIntInclusive() + \" - Qa.Coders Academy\")\r",
+									"\r",
+									"//Gera data atual com o acréscimo de 10 minutos\r",
+									"const dataAtual = Math.floor(Date.now() / 1000);\r",
+									"const startDate = dataAtual + 600\r",
+									"pm.environment.set(\"scheduleStartDate\",startDate)\r",
+									"\r",
+									"//Gera data final\r",
+									"const dataFinal = Math.floor(Date.now() / 1000);\r",
+									"const endDate = dataFinal + 604800\r",
+									"pm.environment.set(\"scheduleEndDate\",endDate)\r",
+									"\r",
+									"// Retorna URL que gera imagens randômicas\r",
+									"var imageURL = \"https://picsum.photos/200/300\";\r",
+									"pm.environment.set(\"scheduleImageURL\", imageURL)\r",
+									"\r",
+									"// Gera um e-mail aleatório\r",
+									"pm.environment.set(\"loginUser\", \r",
+									"pm.variables.replaceIn('{{$randomEmail}}'));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nameFormScheduling\": \"{{nameFormScheduling}}\",\r\n    \"scheduleStartDate\": {{scheduleStartDate}},\r\n    \"scheduleEndDate\": {{scheduleEndDate}},\r\n    \"scheduleImageURL\": \"{{scheduleImageURL}}\",\r\n    \"audit\": [\r\n        {\r\n            \"loginUser\": \"{{loginUser}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings/64f1d99ea7a8554cc76dd2bf",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings",
+								"64f1d99ea7a8554cc76dd2bf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Scheduling",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://develop.qacoders-academy.com.br/api/schedulings/64f1ccdea7a8554cc76dd273",
+							"protocol": "https",
+							"host": [
+								"develop",
+								"qacoders-academy",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"schedulings",
+								"64f1ccdea7a8554cc76dd273"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDZkNDk2N2Y1MzYyY2NjZjRkMTNkZWMiLCJyZWdpc3RyYXRpb24iOiJRYUNvZGVycy0wMDA3IiwiZnVsbE5hbWUiOiJQcmlzY2lsYSBUZWl4ZWlyYSBGZXJyZWlyYSIsIm1haWwiOiJxYWNvZGVyczEwQGFjYWRlbXlfdHJlaW5hbWVudG8uY29tLmJyIiwicGFzc3dvcmQiOiIkMmIkMTAkeGx6QW1lWE45S2FqZG9QWmJETkdxLk52SjVoQXYySWZqWC5VMjRMQTh4c3BwZmZkcjV3Qy4iLCJhY2Nlc3NQcm9maWxlIjoiQURNSU4iLCJpZENvbXBhbnkiOiIiLCJzdGF0dXMiOnRydWUsImF1ZGl0IjpbeyJyZWdpc3RyYXRpb25EYXRlIjoiV2VkIE1heSAyNCAyMDIzIDAwOjE2OjU1IEdNVCswMTAwIChIb3JhIGRlIHZlcsOjbyBkYSBFdXJvcGEgT2NpZGVudGFsKSIsImxvZ2luVXNlciI6IlBYVEZlcnJlaXJhIiwiX2lkIjoiNjQ2ZDQ5NjdmNTM2MmNjY2Y0ZDEzZGVkIn1dLCJfX3YiOjAsImlhdCI6MTY5MzU2NzU3OCwiZXhwIjoxNjkzNjUzOTc4fQ.UgEEtOMqeyfq4wQhXZcW86nxgLJwNnZhsyti9pJJ22M",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "Authorization",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
